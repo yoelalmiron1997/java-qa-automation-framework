@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "ReqRes API - QA Automation Suite",
+		"description": "Colección de pruebas de API para la gestión de usuarios (ReqRes API)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Get Users List (Paginated)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response time is under 1000ms', function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test('Page number is 2 and data is not empty', function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.page).to.eql(2);",
+							"    pm.expect(jsonData.data).to.be.an('array').that.is.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/users?page=2",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "users"],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "2. Create User (POST)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201 Created', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"pm.test('Created user has id and createdAt timestamp', function () {",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('createdAt');",
+							"    pm.expect(jsonData.name).to.eql('morpheus');",
+							"});",
+							"",
+							"// Encadenamiento de variables: Guardar userId en Environment",
+							"pm.environment.set('createdUserId', jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"morpheus\",\n    \"job\": \"leader\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/users",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "users"]
+				}
+			}
+		},
+		{
+			"name": "3. Get Single User by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"pm.test('User ID matches 2', function () {",
+							"    pm.expect(jsonData.data.id).to.eql(2);",
+							"    pm.expect(jsonData.data.email).to.include('@reqres.in');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/users/2",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "users", "2"]
+				}
+			}
+		},
+		{
+			"name": "4. Single User Not Found (404)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 404 Not Found', function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/users/23",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "users", "23"]
+				}
+			}
+		},
+		{
+			"name": "5. Update User (PUT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"pm.test('Updated job field matches zion resident', function () {",
+							"    pm.expect(jsonData.job).to.eql('zion resident');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"morpheus\",\n    \"job\": \"zion resident\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/users/2",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "users", "2"]
+				}
+			}
+		},
+		{
+			"name": "6. Delete User (DELETE)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 204 No Content', function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/users/2",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "users", "2"]
+				}
+			}
+		}
+	]
+}

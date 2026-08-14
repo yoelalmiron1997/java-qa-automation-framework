@@ -1,0 +1,19 @@
+{
+	"id": "e1f2a3b4-5678-90ab-cdef-1234567890ab",
+	"name": "QA Environment",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "https://reqres.in",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "createdUserId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment"
+}

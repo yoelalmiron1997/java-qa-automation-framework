@@ -1,0 +1,31 @@
+# Maven / Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDEs
+.idea/
+*.iml
+*.classpath
+*.project
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Maven wrapper
+/.mvn/wrapper/maven-wrapper.jar
+
+# Test reports and temp
+surefire-reports/
+failsafe-reports/
+coverage/
+
+# Node / other
+node_modules/
