@@ -1,85 +1,179 @@
-# 🚀 QA Automation Interview — Java (Selenium + REST Assured)
+# Java QA Automation Framework
 
-Repositorio de pruebas automatizadas usado para entrevistas y prácticas de QA Automation.
+Framework de automatización de pruebas en Java para validar escenarios web y API con Selenium, REST Assured y JUnit 5.
 
 ## Descripción
 
-Proyecto de ejemplo que contiene pruebas Web (Selenium) y API (REST Assured) organizadas con JUnit 5 y Page Object Model.
+Este repositorio contiene una suite de pruebas automatizadas orientada a QA, diseñada para cubrir:
 
-## Requisitos
+- Login de usuarios en una aplicación web
+- Validación de mensajes de error
+- Flujos básicos de navegación
+- Pruebas de API REST utilizando REST Assured
+- Capturas de pantalla automáticas para evidencias de ejecución
 
-- Java 21 (recomendado; el proyecto fue actualizado a Java 21)
-- Maven 3.9+ (o usar `mvnw` si existiera)
-- Navegador Chrome/Chromium para pruebas Web (o usar WebDriver Manager)
+La estructura del proyecto sigue el patrón Page Object Model (POM) para la capa web y buenas prácticas para pruebas automatizadas.
 
-## Estructura relevante
+## Repositorio
 
-- `pom.xml` — configuración Maven y dependencias
-- `src/test/java/tests/web` — pruebas UI (LoginTest)
-- `src/test/java/tests/api` — pruebas API (UserApiTest)
-- `postman/` — colecciones y entornos para pruebas manuales
+- GitHub: https://github.com/yoelalmiron1997/java-qa-automation-framework.git
 
-## Cómo ejecutar
+## Tecnologías utilizadas
 
-1) Compilar y ejecutar todas las pruebas:
+- Java 17
+- Maven
+- Selenium WebDriver
+- JUnit 5
+- REST Assured
+- ChromeDriver / Google Chrome
 
-```powershell
-mvn clean test
+## Estructura del proyecto
+
+```text
+Prueba-Tecnica/
+├── pom.xml
+├── README.md
+├── docs/
+│   ├── interview-notes.md
+│   ├── test-cases.md
+│   └── test-strategy.md
+├── postman/
+│   ├── collections/
+│   └── environments/
+├── sql/
+│   └── queries.sql
+├── src/
+│   └── test/
+│       └── java/
+│           ├── pages/
+│           ├── tests/
+│           └── utils/
+├── target/
+└── mvn.cmd
 ```
 
-2) Ejecutar un test específico (ej. `LoginTest`):
+## Requisitos previos
 
-```powershell
-mvn -Dtest=LoginTest test
+Antes de ejecutar las pruebas asegúrate de tener instalado:
+
+- Java 17 o superior
+- Maven 3.9+
+- Google Chrome instalado
+- Variables de entorno configuradas para `java` y `mvn`
+
+## Cómo ejecutar las pruebas
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/yoelalmiron1997/java-qa-automation-framework.git
+cd java-qa-automation-framework
 ```
 
-3) Ejecutar solo compilación de tests:
+### 2. Ejecutar todas las pruebas
 
-```powershell
+```bash
+mvn test
+```
+
+### 3. Ejecutar una clase específica
+
+```bash
+mvn -Dtest=tests.web.LoginTest test
+```
+
+```bash
+mvn -Dtest=tests.api.UserApiTest test
+```
+
+### 4. Ejecutar un caso de prueba específico
+
+```bash
+mvn -Dtest=tests.web.LoginTest#testSuccessfulLogin test
+```
+
+### 5. Compilar solo los tests
+
+```bash
 mvn test-compile
 ```
 
-## Notas importantes
+## Casos de prueba disponibles
 
-- El proyecto fue actualizado para compilar con Java 21. Si tu entorno usa Java 17, cambia `JAVA_HOME` o instala JDK 21.
-- Durante la ejecución en mi verificación, las pruebas de API (`UserApiTest`) fallaron por respuestas `401 Unauthorized` del servicio externo `https://reqres.in` — esto es un problema de entorno/autenticación o disponibilidad externa, no de la actualización de Java.
+### Pruebas Web
 
-Si ves `401` en los tests API, verifica:
+Archivo: `src/test/java/tests/web/LoginTest.java`
 
-- Conectividad a `https://reqres.in` desde tu máquina.
-- Si las pruebas requieren headers o tokens, configura variables de entorno o ajusta los tests.
+- `testSuccessfulLogin` - Login exitoso con credenciales válidas
+- `testLoginWithInvalidPassword` - Login con contraseña incorrecta
+- `testEmptyPasswordLogin` - Login con contraseña vacía
+- `testLockedOutUserLogin` - Login con usuario bloqueado
 
-## Subir el proyecto a GitHub
+### Pruebas API
 
-Comandos sugeridos (ejecutar en la raíz del proyecto):
+Archivo: `src/test/java/tests/api/UserApiTest.java`
 
-```powershell
+- `testGetUsersListList` - Obtener lista de usuarios
+- `testCreateUser` - Crear un usuario
+- `testGetSingleUser` - Obtener un usuario por ID
+- `testSingleUserNotFound` - Validar usuario inexistente
+- `testUpdateUser` - Actualizar usuario
+- `testDeleteUser` - Eliminar usuario
+
+## Capturas de pantalla
+
+El proyecto genera evidencia visual de cada prueba web mediante la clase:
+
+- `src/test/java/utils/ScreenshotUtils.java`
+
+Esto facilita revisar el estado visual de cada ejecución y conservar evidencia de fallas o validaciones.
+
+## Nota importante
+
+Las pruebas de API consumen servicios externos y pueden requerir internet o ajustes en los endpoints dependiendo del entorno. Si ocurre un error `401 Unauthorized` o un fallo de conectividad, verifica:
+
+- Conexión a internet
+- Disponibilidad del servicio
+- Endpoint actual
+- Headers o configuración necesarios
+
+## GitHub y primer commit
+
+Este es el flujo recomendado para dejar tu repositorio listo con el primer commit y subirlo a GitHub:
+
+```bash
 git init
 git add .
-git commit -m "Initial commit: project import and Java 21 upgrade"
+git commit -m "Initial commit: Java QA automation project"
 git branch -M main
-git remote add origin https://github.com/yoelalmiron1997/automation-tests-reqres.git
+git remote add origin https://github.com/yoelalmiron1997/java-qa-automation-framework.git
 git push -u origin main
 ```
 
-Si no tienes `git` instalado en Windows, puedes instalarlo con Chocolatey:
+Si el repositorio ya existe y solo quieres conectarlo al remoto actual:
 
-```powershell
-choco install git -y
+```bash
+git branch -M main
+git remote set-url origin https://github.com/yoelalmiron1997/java-qa-automation-framework.git
+git push -u origin main
 ```
 
 ## .gitignore recomendado
 
-Incluye archivos/dirs que no deben subirse:
-
-```
+```gitignore
 target/
 .idea/
 .vscode/
 *.log
 *.iml
 .DS_Store
-/.mvn/wrapper/maven-wrapper.jar
 ```
 
-¿Quieres que añada `.gitignore` automáticamente y haga el commit inicial por ti? (necesito `git` disponible para ejecutar comandos aquí). 
+## Autor
+
+Yoel Almiron
+
+## Licencia
+
+Este proyecto es de uso educativo y demostrativo para fines de automatización de pruebas y aprendizaje profesional.
+
