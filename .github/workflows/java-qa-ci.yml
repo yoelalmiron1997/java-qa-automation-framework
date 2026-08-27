@@ -1,0 +1,56 @@
+name: Java QA Automation CI
+
+# Este workflow ejecuta la suite de pruebas automatizadas cada vez que se hace push o se abre un pull request en la rama main.
+# Sirve como pipeline de integración continua para validar que el proyecto compila y que los tests web y API siguen funcionando.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # 1) Descarga el código del repositorio para que el runner pueda trabajar con el proyecto.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2) Instala Java 17 y configura Maven con caché para acelerar futuras ejecuciones.
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # 3) Instala Google Chrome para que Selenium pueda abrir el navegador en el runner Linux.
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      # 4) Instala ChromeDriver para que Selenium pueda controlar Chrome desde Java.
+      - name: Setup ChromeDriver
+        uses: browser-actions/setup-chromedriver@v1
+
+      # 5) Instala xvfb, necesario para ejecutar navegadores headless o con interfaz virtual en GitHub Actions.
+      - name: Install xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+      # 6) Ejecuta la suite de pruebas Maven. Se usa xvfb-run para simular una pantalla virtual mientras Selenium abre Chrome.
+      - name: Run Selenium and API tests
+        run: xvfb-run -a mvn clean test
+
+      # 7) Guarda los reportes y capturas generadas por Maven como artefactos para revisión posterior.
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            target/surefire-reports/
+            target/screenshots/
