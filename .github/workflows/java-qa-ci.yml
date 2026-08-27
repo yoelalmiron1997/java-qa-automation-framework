@@ -27,21 +27,17 @@ jobs:
           java-version: '17'
           cache: maven
 
-      # 3) Instala Google Chrome para que Selenium pueda abrir el navegador en el runner Linux.
+      # 3) Instala Google Chrome en el runner. Con Selenium 4, el driver puede resolverse automáticamente con Selenium Manager.
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
 
-      # 4) Instala ChromeDriver para que Selenium pueda controlar Chrome desde Java.
-      - name: Setup ChromeDriver
-        uses: browser-actions/setup-chromedriver@v1
-
-      # 5) Instala xvfb, necesario para ejecutar navegadores headless o con interfaz virtual en GitHub Actions.
+      # 4) Instala xvfb para ejecutar Chrome con una pantalla virtual en Linux.
       - name: Install xvfb
         run: sudo apt-get update && sudo apt-get install -y xvfb
 
-      # 6) Ejecuta la suite de pruebas Maven. Se usa xvfb-run para simular una pantalla virtual mientras Selenium abre Chrome.
+      # 5) Ejecuta la suite de pruebas Maven. Se usa xvfb-run para simular una pantalla virtual mientras Selenium abre Chrome.
       - name: Run Selenium and API tests
         run: xvfb-run -a mvn clean test
 
